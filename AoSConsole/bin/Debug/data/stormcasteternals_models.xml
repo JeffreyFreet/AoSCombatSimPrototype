@@ -41,4 +41,19 @@ Unit Size
         <upgrades></upgrades>
         <abilities></abilities>
     </model>
+
+    <model name = "Protectors">
+        <stats>
+            <move>4</move>
+            <save>4</save>
+            <bravery>7</bravery>
+            <wounds>3</wounds>
+        </stats>
+        <size>5</size>
+      <weapons>
+        <weapon type ="melee">Stormstrike Glaive</weapon>
+      </weapons>
+        <upgrades></upgrades>
+        <abilities></abilities>
+    </model>
 </stormcasteternals>

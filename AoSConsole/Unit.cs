@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Dynamic;
 using System.Linq;
 using System.Text;
@@ -48,8 +49,8 @@ namespace AoSConsole
             {
                 totalwounds += m.MeleeAttack(target.TypeModel);
             }
-            //Console.Out.WriteLine("Unit " + Name + " deals " + totalwounds + " wounds.");
             target.TakeWounds(totalwounds);
+            Console.Out.WriteLine(Name + " deals " + totalwounds + " wounds to " + target.Name + " dealing " + target.LostUnits + " casualties.");
         }
 
         //Counts the number of guys still alive in the unit.
@@ -122,8 +123,9 @@ namespace AoSConsole
         public void Battleshock(int modifier)
         {
             Console.Out.WriteLine("Battleshock test for " + Name);
+            Debug.WriteLine("Battleshock roll for " + Name + " (Bravery " + HighestBravery + "): ");
             int losses = Math.Max(0, (Die.Roll(modifier) + LostUnits) - HighestBravery + (int) Math.Floor((double) LiveCount() / 10));
-            Console.Out.WriteLine("Unit " + Name + " takes " + Math.Min(TypeModel.UnitSize, losses) + " losses!");
+            Console.Out.WriteLine(Math.Min(TypeModel.UnitSize, losses) + " models flee from " + Name + "!");
             if (LiveCount() <= losses) TakeWounds(500);
             else
             {

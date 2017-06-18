@@ -75,7 +75,7 @@ Unit Size
         <abilities></abilities>
     </model>
   
-    <model name = "Skinks">
+    <model name = "Skinks (Javelins)">
       <stats>
         <move>8</move>
         <save>6</save>
@@ -88,6 +88,23 @@ Unit Size
         <weapon type ="ranged">Boltspitter</weapon>
         <weapon type ="melee">Meteoric Javelin (M)</weapon>
         <!--weapon type ="melee">Boltspitter (M)</weapon-->
+        <!--weapon type ="melee">Moonstone Club</weapon-->
+      </weapons>
+      <upgrades></upgrades>
+      <abilities></abilities>
+    </model>
+
+    <model name = "Skinks (Boltspitters)">
+      <stats>
+        <move>8</move>
+        <save>6</save>
+        <bravery>10</bravery>
+        <wounds>1</wounds>
+      </stats>
+      <size>10</size>
+      <weapons>
+        <weapon type ="ranged">Boltspitter</weapon>
+        <weapon type ="melee">Boltspitter (M)</weapon>
         <!--weapon type ="melee">Moonstone Club</weapon-->
       </weapons>
       <upgrades></upgrades>

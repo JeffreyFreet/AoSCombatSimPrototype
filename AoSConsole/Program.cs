@@ -20,7 +20,7 @@ namespace AoSConsole
     //Methods included for adjusting the sides of the battle, starting the battle, getting battle data per-round, and other relevant output.
     static class Battle
     {
-        private static int Turn = 0;
+        private static int Turn = 1;
         public static Unit SideA;
         public static Unit SideB;
         
@@ -44,7 +44,7 @@ namespace AoSConsole
         //Resets relevant numbers
         private static void Reset()
         {
-            Turn = 0;
+            Turn = 1;
             
         }
 
@@ -81,13 +81,14 @@ namespace AoSConsole
 
                 Console.WriteLine("\n\n|##| Turn " + Turn + " |##|\n");
                 Console.Out.WriteLine(SideA.Name + " has " + SideA.LiveCount() + " models remaining.");
-                Console.Out.WriteLine(SideB.Name + " has " + SideB.LiveCount() + " models remaining.\n");
+                Console.Out.WriteLine(SideB.Name + " has " + SideB.LiveCount() + " models remaining.");
 
                 //Order of a turn: the sides attack one another, battleshock is then resolved.
-                Unit firstTurn = (Turn % 2 == 0) ? SideA : SideB;
-                Unit secondTurn = (firstTurn == SideA) ? SideB : SideA;
-                
+                Unit firstTurn = (Turn % 2 == 0) ? SideB : SideA;
+                Unit secondTurn = (firstTurn == SideB) ? SideA : SideB;
+
                 //Fight
+                Console.WriteLine("\n||Fight Phase||\n");
 
                 firstTurn.MeleeAttack(secondTurn);
                 if (CheckWin()) break;
@@ -96,13 +97,16 @@ namespace AoSConsole
                 if (CheckWin()) break;
 
 
-
                 //Battleshock
+                Console.WriteLine("\n\n||Battleshock Phase||\n");
                 if (SideA.LostUnits > SideB.LostUnits) SideA.Battleshock(0);
                 if (SideB.LostUnits > SideA.LostUnits) SideB.Battleshock(0);
+                Console.WriteLine("\n|##| End of Turn " + Turn + " |##|\n");
+
                 Turn++;
-                Console.Out.WriteLine("Next Turn?");
+                Console.Out.WriteLine("Press ENTER to begin the next turn!");
                 Console.In.ReadLine();
+                Console.WriteLine("\n----------------------------------------------------------------\n");
             }
             Reset();
         }
@@ -169,9 +173,9 @@ namespace AoSConsole
 
             //CHANGE THESE FOR PLAYTIMES//
             String NameA = "Saurus Warriors (Clubs)";
-            int SizeA = 10;
+            int SizeA = 20;
 
-            String NameB = "Liberators";
+            String NameB = "Protectors";
             int SizeB = 5;
             //--------------------------//
 

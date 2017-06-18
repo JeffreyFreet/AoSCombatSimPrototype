@@ -37,7 +37,7 @@ namespace AoSConsole
         {
             int w = 0;
             for (int i = 0; i < Attacks; i++){ if (HitRoll(hitmod) && WoundRoll(woundmod)) w++;}
-            Console.Out.WriteLine("Weapon " + Name + " does " + w * Damage + " wounds.");
+            //Console.Out.WriteLine("Weapon " + Name + " does " + w * Damage + " wounds.");
             return w * Damage;
         }
 
