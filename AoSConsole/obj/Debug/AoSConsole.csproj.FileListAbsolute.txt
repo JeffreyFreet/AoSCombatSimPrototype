@@ -6,3 +6,11 @@ C:\Users\Benfclark\OneDrive\Crapplications\AoSConsole\AoSConsole\obj\Debug\AoSCo
 C:\Users\Benfclark\OneDrive\Crapplications\AoSConsole\AoSConsole\obj\Debug\AoSConsole.pdb
 C:\Users\Benfclark\OneDrive\Crapplications\AoSConsole\AoSConsole\obj\Debug\AoSConsole.Properties.Resources.resources
 C:\Users\Benfclark\OneDrive\Crapplications\AoSConsole\AoSConsole\obj\Debug\AoSConsole.csproj.GenerateResource.Cache
+C:\Users\Benfclark\Documents\GitHub\AoSCombatSimPrototype\AoSConsole\bin\Debug\AoSConsole.exe.config
+C:\Users\Benfclark\Documents\GitHub\AoSCombatSimPrototype\AoSConsole\bin\Debug\AoSConsole.exe
+C:\Users\Benfclark\Documents\GitHub\AoSCombatSimPrototype\AoSConsole\bin\Debug\AoSConsole.pdb
+C:\Users\Benfclark\Documents\GitHub\AoSCombatSimPrototype\AoSConsole\obj\Debug\AoSConsole.csprojResolveAssemblyReference.cache
+C:\Users\Benfclark\Documents\GitHub\AoSCombatSimPrototype\AoSConsole\obj\Debug\AoSConsole.Properties.Resources.resources
+C:\Users\Benfclark\Documents\GitHub\AoSCombatSimPrototype\AoSConsole\obj\Debug\AoSConsole.csproj.GenerateResource.Cache
+C:\Users\Benfclark\Documents\GitHub\AoSCombatSimPrototype\AoSConsole\obj\Debug\AoSConsole.exe
+C:\Users\Benfclark\Documents\GitHub\AoSCombatSimPrototype\AoSConsole\obj\Debug\AoSConsole.pdb

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -49,7 +51,7 @@ namespace AoSConsole
 
         ~Model()
         {
-            Console.Out.WriteLine("Model " + Name + " removed!");
+            Debug.WriteLine("Model " + Name + " removed!");
         }
         
         //Takes a target model profiel and makes melee attacks against 'it' (assuming the target is just an abstract stat bag, actual wounds are sorted out later)
@@ -59,11 +61,13 @@ namespace AoSConsole
             int total = 0;
             foreach (Weapon w in Weapons)
             {
-                for (int i = 0; i < w.GenerateWounds(0, 0); i++)
+                int c = w.GenerateWounds(0, 0);
+                for (int i = 0; i < c ; i++)
                 {
                     if (!targetModel.TakeHit(w)) total += w.Damage;
                 }
             }
+            Debug.WriteLine("");
             return total;
         }
         
@@ -71,14 +75,15 @@ namespace AoSConsole
         //A save value of 1 is treated as having no save.
         public bool TakeHit(Weapon weapon)
         {
+            if (Program.ShowSaveRolls) Debug.Write(Name + " saving: ");
             int roll = Die.Roll(-weapon.Rend);
             if (Save == 1) roll = 0;
             if (roll >= Save)
             {
-                //Console.Out.Write(Name + " save made!\n");
+                if (Program.ShowSaveRolls) Debug.Write("(Saved!)\n");
                 return true;
             }
-            //Console.Out.WriteLine(Name + " save failed!");
+            if (Program.ShowSaveRolls) Debug.Write("Failed!\n");
             return false;
         }
     }

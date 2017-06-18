@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-->Template for a weapon profile
+Attributes: Name
+Integers: Range
+          Attacks
+          To tohit
+          To towound
+          Rend
+          Damage
+<weapon name = "">
+    <range></range>
+    <attacks></attacks>
+    <tohit></tohit>
+    <towound></towound>
+    <rend></rend>
+    <damage>/<damage>
+</weapon><-->
+
+<stormcasteternals>
+    <weapon name = "Warhammer">
+      <range>1</range>
+      <attacks>2</attacks>
+      <tohit>4</tohit>
+      <towound>3</towound>
+      <rend>0</rend>
+      <damage>1</damage>
+    </weapon>
+</stormcasteternals>

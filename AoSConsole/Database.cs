@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
@@ -31,7 +32,7 @@ namespace AoSConsole
 
             faction.ToLower();
             try { weaponFile = XElement.Load(String.Concat(faction, "_", "weapons.xml"));}
-            catch(FileNotFoundException f) { Console.Out.Write("Error: Data files for " + faction + " not found! (" + f.Message + ")\n"); return; }
+            catch(FileNotFoundException f) { Debug.Write("Error: Data files for " + faction + " not found! (" + f.Message + ")\n"); return; }
 
             modelFile = XElement.Load(String.Concat(faction, "_", "models.xml"));
 
@@ -50,7 +51,7 @@ namespace AoSConsole
                         int.Parse(weapon.Element("damage").Value)
                     )
                 );
-                Console.Out.WriteLine("Weapon " + weapon.Attribute("name").Value + " added!");
+                Debug.WriteLine("Weapon " + weapon.Attribute("name").Value + " added!");
             }
             
 
@@ -66,7 +67,7 @@ namespace AoSConsole
                 {
                     Weapon w;
                     if (WeaponData.TryGetValue(mw.Value.ToLower(), out w)) weapons.Add(w);
-                    else Console.Out.WriteLine("Weapon profile " + mw.Value + " not found!");
+                    else Debug.WriteLine("Weapon profile " + mw.Value + " not found!");
                 }
 
                 ModelData.Add(n.ToLower(), new Model(
@@ -79,10 +80,11 @@ namespace AoSConsole
                         weapons
                     )
                 );
+                Debug.WriteLine("Model " + model.Attribute("name").Value + " added!");
             }
 
             String capname = String.Concat(faction.Substring(0,1).ToUpper(), faction.Substring(1));
-            Console.Out.WriteLine("Successfully imported " + WeaponData.Count + " weapon profiles and " +
+            Debug.WriteLine("Successfully imported " + WeaponData.Count + " weapon profiles and " +
                                   ModelData.Count + " model profiles for the " + capname + " faction.");
         }
 
@@ -90,7 +92,7 @@ namespace AoSConsole
         {
             Model m;
             if (ModelData.TryGetValue(name.ToLower(), out m)) return m;
-            Console.Out.WriteLine("Model " + name + " not found!"); return null;
+            Debug.WriteLine("Model " + name + " not found!"); return null;
         }
     }
 }

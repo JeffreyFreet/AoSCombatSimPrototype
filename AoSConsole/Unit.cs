@@ -21,11 +21,12 @@ namespace AoSConsole
         public int Count { get; }
 
         public String Name;
+        //public String Faction;
         public Model TypeModel;
         public int HighestBravery = 0;
         public int LostUnits = 0;
 
-        public Unit(Model model, int number)
+        public Unit(Model model, int number, string Faction = "")
         {
             Count = (int) Math.Ceiling(number/(double) model.UnitSize);
             Models = new List<Model>();
@@ -120,10 +121,9 @@ namespace AoSConsole
 
         public void Battleshock(int modifier)
         {
-            Console.Out.WriteLine("Battleshock!");
-            int losses = Math.Max(0, HighestBravery + (int) Math.Floor((double) LiveCount() / 10) -
-                         (Die.Roll(modifier) + LostUnits));
-            Console.Out.WriteLine("Unit " + Name + " takes " + losses + " losses!");
+            Console.Out.WriteLine("Battleshock test for " + Name);
+            int losses = Math.Max(0, (Die.Roll(modifier) + LostUnits) - HighestBravery + (int) Math.Floor((double) LiveCount() / 10));
+            Console.Out.WriteLine("Unit " + Name + " takes " + Math.Min(TypeModel.UnitSize, losses) + " losses!");
             if (LiveCount() <= losses) TakeWounds(500);
             else
             {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -22,11 +23,11 @@ namespace AoSConsole
         private static int Turn = 0;
         public static Unit SideA;
         public static Unit SideB;
+        
 
         //Order of battle: SideA takes first turn, then SideB, and so on.
         //During its turn to go, a unit generates a pool of wounds from one weapon, chucks it at the enemy (saves etc. calculated) and repeats this with its other weapons.
         //Continues until one (or both!) sides have no more models remaining.
-        
         
         //Data output methods
         public static void PrintSides()
@@ -38,6 +39,13 @@ namespace AoSConsole
 
             if (SideB!= null) Console.Out.WriteLine(SideB.Models.First().Name + " (" + SideB.Models.Count + ")");
             else Console.Out.WriteLine("Side B Empty!");
+        }
+
+        //Resets relevant numbers
+        private static void Reset()
+        {
+            Turn = 0;
+            
         }
 
         //Check to see if one side has destroyed the other entirely.
@@ -68,44 +76,74 @@ namespace AoSConsole
             {
                 if (CheckWin()) break;
 
-                Console.WriteLine("\n\n|##| Turn " + Turn + " |##|\n");
-
                 SideA.NewTurn();
                 SideB.NewTurn();
+
+                Console.WriteLine("\n\n|##| Turn " + Turn + " |##|\n");
+                Console.Out.WriteLine(SideA.Name + " has " + SideA.LiveCount() + " models remaining.");
+                Console.Out.WriteLine(SideB.Name + " has " + SideB.LiveCount() + " models remaining.\n");
 
                 //Order of a turn: the sides attack one another, battleshock is then resolved.
                 Unit firstTurn = (Turn % 2 == 0) ? SideA : SideB;
                 Unit secondTurn = (firstTurn == SideA) ? SideB : SideA;
                 
                 //Fight
+
                 firstTurn.MeleeAttack(secondTurn);
                 if (CheckWin()) break;
+
                 secondTurn.MeleeAttack(firstTurn);
-                
+                if (CheckWin()) break;
+
+
+
                 //Battleshock
                 if (SideA.LostUnits > SideB.LostUnits) SideA.Battleshock(0);
                 if (SideB.LostUnits > SideA.LostUnits) SideB.Battleshock(0);
                 Turn++;
+                Console.Out.WriteLine("Next Turn?");
+                Console.In.ReadLine();
             }
+            Reset();
         }
     }
 
     class Program
     {
+        //Change these numbers to toggle console output data.
+        public static bool ShowDieRolls { get; } = true;
+        public static bool ShowHitRolls { get; } = true;
+        public static bool ShowWoundRolls { get; } = true;
+        public static bool ShowSaveRolls { get; } = true;
+
         private static String appname = "Age of Sigmar Battle Simulator (Console Prototype)";
         private static String version = "0.0.1";
 
-        
+        private static Dictionary<String, Database> Factions = new Dictionary<string, Database>();
 
-        /*public static void LoadFactions()
+        public static void LoadFactions()
         {
             XElement facFile = XElement.Load("faction_list.xml");
             foreach (XElement entry in facFile.Descendants())
             {
-                if (entry.Value.ToLower() == "seraphon") 
+                Factions.Add(entry.Value, new Database(entry.Value));
             }
-        }*/
-       
+        }
+
+        public static Model GetModel(String name)
+        {
+            name = name.ToLower();
+            Console.Out.WriteLine("Finding " + name);
+            foreach (KeyValuePair<String, Database> pair in Factions)
+            {   
+                Console.Out.WriteLine("Searching in " + pair.Key);
+                Dictionary<String, Model> mods = pair.Value.ModelData;
+                Model m;
+                if (mods.TryGetValue(name, out m)) return m;
+            }
+            return null;
+        }
+
         /*Prints the main menu
         static void PrintMenu()
         {
@@ -118,28 +156,38 @@ namespace AoSConsole
         */
         static void Main(string[] args)
         {
+            Console.Out.WriteLine(AppDomain.CurrentDomain.BaseDirectory);
+
             Directory.SetCurrentDirectory(
-                "C:\\Users\\Benfclark\\OneDrive\\Crapplications\\AoSConsole\\AoSConsole\\data");
+                String.Concat(AppDomain.CurrentDomain.BaseDirectory, "\\data"));
 
             //Initialisation
             Console.Out.WriteLine("Welcome to " + appname + "!\nv." + version);
-            //LoadFactions();
 
             //FACTION DATABASES
-            Database Seraphon = new Database("seraphon");
-            Database StormcastEternals = new Database("stormcasteternals");
+            LoadFactions();
 
             //CHANGE THESE FOR PLAYTIMES//
-
-            Model UnitA = Seraphon.GetModel("Skinks");
+            String NameA = "Saurus Warriors (Clubs)";
             int SizeA = 10;
 
-            Model UnitB = StormcastEternals.GetModel("Liberators");
-            int SizeB = 10;
+            String NameB = "Liberators";
+            int SizeB = 5;
+            //--------------------------//
 
-            //----------------------------------------------------//
+            Model UnitA = GetModel(NameA);
+            if (UnitA == null)
+            {
+                Console.Out.WriteLine("Unit " + NameA + " not found!");
+                //Environment.Exit(-1);
+            }
 
-            
+            Model UnitB = GetModel(NameB);
+            if (UnitB == null)
+            {
+                Console.Out.WriteLine("Unit " + NameB + " not found!");
+                //Environment.Exit(-1);
+            }
 
             while (true)
             {

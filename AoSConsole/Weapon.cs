@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -36,20 +37,33 @@ namespace AoSConsole
         {
             int w = 0;
             for (int i = 0; i < Attacks; i++){ if (HitRoll(hitmod) && WoundRoll(woundmod)) w++;}
-            //Console.Out.WriteLine("Weapon " + Name + " does " + w * Damage + " wounds.");
+            Console.Out.WriteLine("Weapon " + Name + " does " + w * Damage + " wounds.");
             return w * Damage;
         }
 
         public bool HitRoll(int modifier)
         {
-            //Console.Out.Write("Hit Roll: ");
-            return Die.Roll(modifier) >= ToHit;
+            if (Program.ShowHitRolls) Debug.Write(Name + ": ");
+            int r = Die.Roll(modifier);
+            if (r >= ToHit)
+            {
+                if (Program.ShowHitRolls) Debug.Write("(Hits!) => ");
+                return true;
+            }
+            if (Program.ShowHitRolls) Debug.Write("(Misses!)\n");
+            return false;
         }
 
         public bool WoundRoll(int modifier)
         {
-            //Console.Out.Write("Wound Roll: ");
-            return Die.Roll(modifier) >= ToWound;
+            int r = Die.Roll(modifier);
+            if (r >= ToHit)
+            {
+                if (Program.ShowWoundRolls) Debug.Write("(Wounds!)\n");
+                return true;
+            }
+            if (Program.ShowWoundRolls) Debug.Write("(Fails!)\n");
+            return false;
         }
     }
 }

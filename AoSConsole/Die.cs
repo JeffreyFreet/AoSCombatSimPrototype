@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,12 +14,12 @@ namespace AoSConsole
 {
     static class Die
     {
-        private static Random rand = new Random();
+        private static readonly Random rand = new Random(DateTime.UtcNow.Millisecond);
 
         public static int Roll(int modifier)
         {
             int r = rand.Next(1, 7);
-            //Console.Out.WriteLine(r);
+            if (Program.ShowDieRolls) Debug.Write("Rolled " + r + " ");
             return r;
         }
     }
