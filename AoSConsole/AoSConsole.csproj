@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Battle.cs" />
     <Compile Include="Die.cs" />
     <Compile Include="Model.cs" />
     <Compile Include="Program.cs" />
@@ -51,6 +52,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Stats.cs" />
     <Compile Include="Unit.cs" />
     <Compile Include="Weapon.cs" />
     <Compile Include="Database.cs" />

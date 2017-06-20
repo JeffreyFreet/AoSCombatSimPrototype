@@ -20,6 +20,8 @@ namespace AoSConsole
         public int ToWound { get; } 
         public int Rend { get; }
         public int Damage { get; }
+        //True = Melee, False = Ranged
+        public bool Type { get; }
 
         public Weapon(string name, int range, int attacks, int toHit, int toWound, int rend, int damage)
         {

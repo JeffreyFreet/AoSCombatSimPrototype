@@ -25,16 +25,18 @@ namespace AoSConsole
         public int UnitSize { get; private set; }
 
         //Weapons
-        public List<Weapon> Weapons { get; }
-        
-        public Model(string name, int move, int wounds, int bravery, int save, int unitsize, List<Weapon> weapons)
+        public List<Weapon> MeleeWeapons { get; }
+        public List<Weapon> RangedWeapons { get; }
+
+        public Model(string name, int move, int wounds, int bravery, int save, int unitsize, List<Weapon> mweapons, List<Weapon> rweapons)
         {
             Name = name;
             Move = move;
             MaxWounds = Wounds = wounds;
             Bravery = bravery;
             Save = save;
-            Weapons = weapons;
+            MeleeWeapons = mweapons;
+            RangedWeapons = rweapons;
             UnitSize = unitsize;
         }
 
@@ -45,7 +47,8 @@ namespace AoSConsole
             MaxWounds = Wounds = source.Wounds;
             Bravery = source.Bravery;
             Save = source.Save;
-            Weapons = source.Weapons;
+            MeleeWeapons = source.MeleeWeapons;
+            RangedWeapons = source.RangedWeapons;
             UnitSize = source.UnitSize;
         }
 
@@ -56,11 +59,12 @@ namespace AoSConsole
         
         //Takes a target model profiel and makes melee attacks against 'it' (assuming the target is just an abstract stat bag, actual wounds are sorted out later)
         //This takes care fo all lookups for saves and whatnot.
-        public int MeleeAttack(Model targetModel)
+        public int MeleeAttack(Model targetModel, int range)
         {
             int total = 0;
-            foreach (Weapon w in Weapons)
+            foreach (Weapon w in MeleeWeapons)
             {
+                if (w.Range < range) continue;
                 int c = w.GenerateWounds(0, 0);
                 for (int i = 0; i < c ; i++)
                 {
@@ -86,6 +90,8 @@ namespace AoSConsole
             if (Program.ShowSaveRolls) Debug.Write("Failed!\n");
             return false;
         }
+        
+        
     }
 }
 ;

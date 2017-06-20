@@ -20,17 +20,19 @@ namespace AoSConsole
 
         //How many times the unit size multiplier this unit is.
         public int Count { get; }
+        private int Number;
 
         public String Name;
         //public String Faction;
         public Model TypeModel;
-        public int HighestBravery = 0;
-        public int LostUnits = 0;
+        public int HighestBravery;
+        public int LostModels = 0;
 
         public Unit(Model model, int number, string Faction = "")
         {
-            Count = (int) Math.Ceiling(number/(double) model.UnitSize);
             Models = new List<Model>();
+            Count = (int) Math.Ceiling(number/(double) model.UnitSize);
+            Number = number;
             Name = model.Name;
             TypeModel = model;
 
@@ -42,21 +44,57 @@ namespace AoSConsole
         }
         
         //Go through each model in the unit and get it to generate and send wounds to the opposing unit.
-        public void MeleeAttack(Unit target)
+        //The size of the frontage determines the maximum number of models that can attack, however this is looped through for different ranges of weapon.
+        //We're simplifying it to two ranges: 1" (most weapons) and 2" (spears/polearms).
+        //This gives us a more accurate idea of how units with spears perform compared to those with bog-standard melee weapons.
+        public void MeleeAttack(Unit target, int front)
         {
             int totalwounds = 0;
-            foreach (Model m in Models)
+
+            //First 'rank'
+            int i = 0;
+            Model m;
+            for (; i < front; i++)
             {
-                totalwounds += m.MeleeAttack(target.TypeModel);
+                try
+                {
+                    m = Models[i];
+                    if (m == null) break;
+                }
+                catch(ArgumentOutOfRangeException) {break;}
+                Debug.WriteLine("First rank!");
+                totalwounds += Models[i].MeleeAttack(target.TypeModel, 1);
             }
+            for (int j = 0; j < front; j++)
+            {
+                try
+                {
+                    m = Models[i + j];
+                    if (m == null) break;
+                }
+                catch (ArgumentOutOfRangeException) { break; }
+                Debug.WriteLine("Second rank!");
+                totalwounds += Models[i + j].MeleeAttack(target.TypeModel, 2);
+            }
+
             target.TakeWounds(totalwounds);
-            Console.Out.WriteLine(Name + " deals " + totalwounds + " wounds to " + target.Name + " dealing " + target.LostUnits + " casualties.");
+            Debug.WriteLine(Name + " deals " + totalwounds + " wounds to " + target.Name + " dealing " + target.LostModels + " casualties.");
         }
 
         //Counts the number of guys still alive in the unit.
         public int LiveCount()
         {
             return Models.Count(p => p != null);
+        }
+
+        public int DeadCount()
+        {
+            return Number - LiveCount();
+        }
+
+        public void NewTurn()
+        {
+            LostModels = 0;
         }
 
     //For resolving a number of wounds dealt to this unit 
@@ -66,11 +104,12 @@ namespace AoSConsole
             int c = count;
             foreach (Model m in Models)
             {
+                if (m == null) continue;
                 if (c >= m.Wounds)
                 {
                     c -= m.Wounds;
                     m.Wounds = 0;
-                    LostUnits++;
+                    LostModels++;
                 }
                 else
                 {
@@ -78,34 +117,28 @@ namespace AoSConsole
                     break;
                 }
             }
-            if (TakeLosses()) Console.Out.WriteLine("Unit of " + Name + " destroyed!"); 
+            if (TakeLosses()) Console.Out.WriteLine(""); 
         }
 
         //After taking wounds remove killed units and 'clean up'
         //Returns whether or not the unit has been destroyed entirely.
         private bool TakeLosses()
         {
-            int c = LiveCount();
-            if (c == 0)
-            {
-                return true;
-            }
             List<Model> newList = new List<Model>();
             foreach (Model m in Models)
             {
                 if (m.Wounds > 0) newList.Add(m);
             }
-
             Models = newList;
-            //Console.Out.WriteLine(Name + " has " + LiveCount() + " models left.");
+            
+            if (LiveCount() == 0)
+            {
+                return true;
+            }
+            Debug.WriteLine(Name + " has " + LiveCount() + " models left.");
             return false;
         }
-
-        //Refresh relevant turn-specific data.
-        public void NewTurn()
-        {
-            LostUnits = 0;
-        }
+        
 
         /*Evaluate battleshock test
         *From the Rules:
@@ -122,10 +155,11 @@ namespace AoSConsole
 
         public void Battleshock(int modifier)
         {
-            Console.Out.WriteLine("Battleshock test for " + Name);
-            Debug.WriteLine("Battleshock roll for " + Name + " (Bravery " + HighestBravery + "): ");
-            int losses = Math.Max(0, (Die.Roll(modifier) + LostUnits) - HighestBravery + (int) Math.Floor((double) LiveCount() / 10));
-            Console.Out.WriteLine(Math.Min(TypeModel.UnitSize, losses) + " models flee from " + Name + "!");
+            //Console.Out.WriteLine("Battleshock test for " + Name);
+            //Debug.WriteLine("Battleshock roll for " + Name + " (Bravery " + HighestBravery + "): ");
+
+            int losses = Math.Max(0, (Die.Roll(modifier) + DeadCount()) - (HighestBravery + (int) Math.Floor((double) LiveCount() / 10)));
+            //Console.Out.WriteLine(Math.Min(TypeModel.UnitSize, losses) + " models flee from " + Name + "!");
             if (LiveCount() <= losses) TakeWounds(500);
             else
             {
@@ -139,5 +173,17 @@ namespace AoSConsole
                 TakeLosses();
             }
         }
+
+        //Reset all models and wounds in unit.
+        public void Reset()
+        {
+            LostModels = 0;
+            Models.RemoveAll(m => m != null);
+            for (int i = 0; i < Number; i++)
+            {
+                Models.Add(new Model(TypeModel));
+            }
+        }
+
     }
 }

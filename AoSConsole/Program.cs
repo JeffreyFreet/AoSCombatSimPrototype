@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
@@ -12,105 +14,13 @@ using System.Xml.Linq;
  Version 0.0.1 - June 2017
  */
 
+//TODO Tidy up class structure.
+//TODO Add unit upgrades and multiple weapon types.
+//TODO Add more units and weapons!
+
 namespace AoSConsole
 {
-
-    //Battle Class
-    //Properties contain the units on both sides, a turn ticker, and other relevant metadata.
-    //Methods included for adjusting the sides of the battle, starting the battle, getting battle data per-round, and other relevant output.
-    static class Battle
-    {
-        private static int Turn = 1;
-        public static Unit SideA;
-        public static Unit SideB;
-        
-
-        //Order of battle: SideA takes first turn, then SideB, and so on.
-        //During its turn to go, a unit generates a pool of wounds from one weapon, chucks it at the enemy (saves etc. calculated) and repeats this with its other weapons.
-        //Continues until one (or both!) sides have no more models remaining.
-        
-        //Data output methods
-        public static void PrintSides()
-        {    
-            Console.Out.WriteLine("\n|<>| The Sides |<>|\n");
-
-            if (SideA != null) Console.Out.WriteLine(SideA.Models.First().Name + " (" + SideA.Models.Count + ")");
-            else Console.Out.WriteLine("Side A Empty!");
-
-            if (SideB!= null) Console.Out.WriteLine(SideB.Models.First().Name + " (" + SideB.Models.Count + ")");
-            else Console.Out.WriteLine("Side B Empty!");
-        }
-
-        //Resets relevant numbers
-        private static void Reset()
-        {
-            Turn = 1;
-            
-        }
-
-        //Check to see if one side has destroyed the other entirely.
-        private static bool CheckWin()
-        {
-            if (SideA.LiveCount() <= 0)
-            {
-                Console.Out.WriteLine("Side A (" + SideA.Name + ") destroyed!\nSide B (" + SideB.Name + ") is victorious with " + SideB.LiveCount() + " models remaining!");
-                return true;
-            }
-            if (SideB.LiveCount() <= 0)
-            {
-                Console.Out.WriteLine("Side B (" + SideB.Name + ") destroyed!\nSide B (" + SideA.Name + ") is victorious with " + SideA.LiveCount() + " models remaining!");
-                return true;
-            }
-            return false;
-        }
-
-        //Run the battle round-by-round until one side is destroyed.
-        public static void Play()
-        {
-            Console.WriteLine("\n\n||==|| -------------------- ||==||");
-            Console.WriteLine("||==|| Let Battle Commence! ||==||");
-            Console.WriteLine("||==|| -------------------- ||==||");
-            //Each run of this loop is one round of combat.
-            //We assume A takes turn 0, followed by B taking turn 1, etc.
-            while (true)
-            {
-                if (CheckWin()) break;
-
-                SideA.NewTurn();
-                SideB.NewTurn();
-
-                Console.WriteLine("\n\n|##| Turn " + Turn + " |##|\n");
-                Console.Out.WriteLine(SideA.Name + " has " + SideA.LiveCount() + " models remaining.");
-                Console.Out.WriteLine(SideB.Name + " has " + SideB.LiveCount() + " models remaining.");
-
-                //Order of a turn: the sides attack one another, battleshock is then resolved.
-                Unit firstTurn = (Turn % 2 == 0) ? SideB : SideA;
-                Unit secondTurn = (firstTurn == SideB) ? SideA : SideB;
-
-                //Fight
-                Console.WriteLine("\n||Fight Phase||\n");
-
-                firstTurn.MeleeAttack(secondTurn);
-                if (CheckWin()) break;
-
-                secondTurn.MeleeAttack(firstTurn);
-                if (CheckWin()) break;
-
-
-                //Battleshock
-                Console.WriteLine("\n\n||Battleshock Phase||\n");
-                if (SideA.LostUnits > SideB.LostUnits) SideA.Battleshock(0);
-                if (SideB.LostUnits > SideA.LostUnits) SideB.Battleshock(0);
-                Console.WriteLine("\n|##| End of Turn " + Turn + " |##|\n");
-
-                Turn++;
-                Console.Out.WriteLine("Press ENTER to begin the next turn!");
-                Console.In.ReadLine();
-                Console.WriteLine("\n----------------------------------------------------------------\n");
-            }
-            Reset();
-        }
-    }
+    
 
     class Program
     {
@@ -173,10 +83,10 @@ namespace AoSConsole
 
             //CHANGE THESE FOR PLAYTIMES//
             String NameA = "Saurus Warriors (Clubs)";
-            int SizeA = 20;
+            int SizeA = 50;
 
-            String NameB = "Protectors";
-            int SizeB = 5;
+            String NameB = "Liberators";
+            int SizeB = 25;
             //--------------------------//
 
             Model UnitA = GetModel(NameA);
@@ -190,17 +100,68 @@ namespace AoSConsole
             if (UnitB == null)
             {
                 Console.Out.WriteLine("Unit " + NameB + " not found!");
-                //Environment.Exit(-1);
+                Console.In.ReadLine();
+                Environment.Exit(-1);
             }
 
+
+            
             while (true)
             {
+
+                Console.Out.WriteLine("How many battles?");
+                int reps = int.Parse(Console.In.ReadLine());
+
+                Stats[] BattleArray = new Stats[reps];
+
                 Battle.SideA = new Unit(UnitA, SizeA);
                 Battle.SideB = new Unit(UnitB, SizeB);
-                Battle.PrintSides();
-                Console.Out.WriteLine("\nBegin?");
-                Console.In.ReadLine();
-                Battle.Play();
+
+                Console.Out.WriteLine("Simulating " + reps + " battles.");
+                for (int i = 0; i < reps; i++)
+                {
+                    Debug.WriteLine("Battle: " + i  + "/" + reps);
+                    Console.Out.WriteLine("Battle: " + (i+1) + "/" + reps);
+                    BattleArray[i] = Battle.Play(false);
+                    Battle.Reset();
+                }
+
+                //Calculate averages.
+                float AWins = 0;
+                float BWins = 0;
+                float ASurv = 0;
+                float BSurv = 0;
+
+                foreach (Stats stat in BattleArray)
+                {
+                    if (stat.Winner())
+                    {
+                        AWins++;
+                        ASurv += stat.SurvivingModels(true);
+                    }
+                    else
+                    {
+                        BWins++;
+                        BSurv += stat.SurvivingModels(false);
+                    }
+                }
+
+                String mostWins = (AWins > BWins) ? Battle.SideA.Name : Battle.SideB.Name;
+                float winNum = (AWins > BWins) ? AWins : BWins;
+                
+                Console.Out.WriteLine("Successfully ran " + reps + " battles.");
+                Console.Out.WriteLine("NUMBERS TIME!\n");
+                Console.Out.WriteLine("|Most wins|\n" + mostWins + " with " + winNum + "\n");
+                Console.Out.WriteLine("|Percentage of games won|\n" + Battle.SideA.Name + ": " + 100*(AWins/reps) + "%\n" + Battle.SideB.Name + ": " + 100*(BWins/reps) + "%\n");
+                float ASpercent = 100*(ASurv/reps) / SizeA;
+                float BSpercent = 100*(BSurv/reps) / SizeB;
+                Console.Out.WriteLine("|Average Surviving Models Per Win|\n" + Battle.SideA.Name + ": " + (ASurv/reps) + " (" + ASpercent + "%)\n" + Battle.SideB.Name + ": " + (BSurv/reps) + " (" + BSpercent + " %)\n");
+
+                //Battle.PrintSides();
+                //Console.Out.WriteLine("\nBegin?");
+                //Console.In.ReadLine();
+
+
                 Console.Out.WriteLine("\nPlay again? (Y/N)");
                 String c = Console.In.ReadLine().ToLower();
                 if (c == "n") break;

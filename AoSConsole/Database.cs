@@ -36,7 +36,7 @@ namespace AoSConsole
 
             modelFile = XElement.Load(String.Concat(faction, "_", "models.xml"));
 
-            //Load melee weapons
+            //Load weapons
             XElement weaponElement = weaponFile;
             foreach (var weapon in weaponElement.Elements())
             {
@@ -62,11 +62,16 @@ namespace AoSConsole
                 XElement weaps = model.Element("weapons");
                 XElement stats = model.Element("stats");
 
-                List<Weapon> weapons = new List<Weapon>();
+                List<Weapon> mweapons = new List<Weapon>();
+                List<Weapon> rweapons = new List<Weapon>();
                 foreach (var mw in weaps.Descendants())
                 {
                     Weapon w;
-                    if (WeaponData.TryGetValue(mw.Value.ToLower(), out w)) weapons.Add(w);
+                    if (WeaponData.TryGetValue(mw.Value.ToLower(), out w))
+                    {
+                        if (mw.Attribute("type").Value == "melee") mweapons.Add(w);
+                        else rweapons.Add(w);
+                    }
                     else Debug.WriteLine("Weapon profile " + mw.Value + " not found!");
                 }
 
@@ -77,7 +82,8 @@ namespace AoSConsole
                         int.Parse(stats.Element("bravery").Value),
                         int.Parse(stats.Element("save").Value),
                         int.Parse(model.Element("size").Value),
-                        weapons
+                        mweapons,
+                        rweapons
                     )
                 );
                 Debug.WriteLine("Model " + model.Attribute("name").Value + " added!");
