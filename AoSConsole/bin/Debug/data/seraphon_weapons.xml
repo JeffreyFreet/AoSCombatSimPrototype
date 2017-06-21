@@ -98,4 +98,22 @@ Integers: Range
       <rend>0</rend>
       <damage>1</damage>
     </weapon>
+
+    <weapon name = "Drakebite Maul">
+      <range>2</range>
+      <attacks>4</attacks>
+      <tohit>4</tohit>
+      <towound>3</towound>
+      <rend>0</rend>
+      <damage>2</damage>
+    </weapon>
+    
+    <weapon name = "Vice-Like Jaws">
+      <range>1</range>
+      <attacks>1</attacks>
+      <tohit>4</tohit>
+      <towound>3</towound>
+      <rend>-1</rend>
+      <damage>1</damage>
+    </weapon>
 </seraphon>

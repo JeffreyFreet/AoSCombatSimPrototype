@@ -82,11 +82,11 @@ namespace AoSConsole
             LoadFactions();
 
             //CHANGE THESE FOR PLAYTIMES//
-            String NameA = "Saurus Warriors (Clubs)";
-            int SizeA = 50;
+            String NameA = "Kroxigor";
+            int SizeA = 3;
 
-            String NameB = "Liberators";
-            int SizeB = 25;
+            String NameB = "Protectors";
+            int SizeB = 5;
             //--------------------------//
 
             Model UnitA = GetModel(NameA);

@@ -110,4 +110,20 @@ Unit Size
       <upgrades></upgrades>
       <abilities></abilities>
     </model>
+    
+    <model name = "Kroxigor">
+      <stats>
+        <move>8</move>
+        <save>4</save>
+        <bravery>10</bravery>
+        <wounds>4</wounds>
+      </stats>
+      <size>3</size>
+      <weapons>
+        <weapon type ="melee">Drakebite Maul</weapon>
+        <weapon type ="melee">Vice-Like Jaws</weapon>
+      </weapons>
+      <upgrades></upgrades>
+      <abilities></abilities>
+    </model>
 </seraphon>
