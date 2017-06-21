@@ -83,7 +83,8 @@ namespace AoSConsole
                         int.Parse(stats.Element("save").Value),
                         int.Parse(model.Element("size").Value),
                         mweapons,
-                        rweapons
+                        rweapons,
+                        Int16.Parse(model.Element("cost").Value)
                     )
                 );
                 Debug.WriteLine("Model " + model.Attribute("name").Value + " added!");

@@ -3,4 +3,5 @@
 <factions>
     <faction allegiance = "Order">Seraphon</faction>
     <faction allegiance = "Order">StormcastEternals</faction>
+    <faction allegiance = "Chaos">Skaven</faction>
 </factions>

@@ -23,12 +23,13 @@ namespace AoSConsole
         public int Bravery { get; private set; } 
         public int Save { get; private set; }
         public int UnitSize { get; private set; }
+        public int Cost { get; private set; }
 
         //Weapons
         public List<Weapon> MeleeWeapons { get; }
         public List<Weapon> RangedWeapons { get; }
 
-        public Model(string name, int move, int wounds, int bravery, int save, int unitsize, List<Weapon> mweapons, List<Weapon> rweapons)
+        public Model(string name, int move, int wounds, int bravery, int save, int unitsize, List<Weapon> mweapons, List<Weapon> rweapons, int cost)
         {
             Name = name;
             Move = move;
@@ -38,6 +39,7 @@ namespace AoSConsole
             MeleeWeapons = mweapons;
             RangedWeapons = rweapons;
             UnitSize = unitsize;
+            Cost = cost;
         }
 
         public Model(Model source)

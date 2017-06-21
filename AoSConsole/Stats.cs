@@ -40,9 +40,8 @@ namespace AoSConsole
 
         public int SurvivingModels(bool side)
         {
-
-            Debug.WriteLine("SideA has " + SideAModels.Last());
-            Debug.WriteLine("SideB has " + SideBModels.Last());
+            //Debug.WriteLine("SideA has " + SideAModels.Last());
+            //Debug.WriteLine("SideB has " + SideBModels.Last());
             if (side)
             {
                 return SideAModels.Last();

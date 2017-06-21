@@ -21,6 +21,7 @@ namespace AoSConsole
         //How many times the unit size multiplier this unit is.
         public int Count { get; }
         private int Number;
+        public int PointsValue;
 
         public String Name;
         //public String Faction;
@@ -32,9 +33,11 @@ namespace AoSConsole
         {
             Models = new List<Model>();
             Count = (int) Math.Ceiling(number/(double) model.UnitSize);
+            PointsValue = model.Cost * Count;
             Number = number;
             Name = model.Name;
             TypeModel = model;
+            Debug.WriteLine("Unit costs:" + PointsValue);
 
             for (int i = 0; i < number; i++)
             {

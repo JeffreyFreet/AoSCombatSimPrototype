@@ -35,6 +35,7 @@ Unit Size
             <wounds>2</wounds>
         </stats>
         <size>5</size>
+        <cost>100</cost>
       <weapons>
         <weapon type ="melee">Warhammer</weapon>
       </weapons>
@@ -50,6 +51,7 @@ Unit Size
             <wounds>3</wounds>
         </stats>
         <size>5</size>
+        <cost>200</cost>
       <weapons>
         <weapon type ="melee">Stormstrike Glaive</weapon>
       </weapons>

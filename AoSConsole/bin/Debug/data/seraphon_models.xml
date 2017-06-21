@@ -35,6 +35,7 @@ Unit Size
             <wounds>1</wounds>
         </stats>
         <size>10</size>
+        <cost>100</cost>
       <weapons>
         <weapon type ="melee">Celestite Spear</weapon>
         <weapon type ="melee">Powerful Jaws and Stardrake Shield</weapon>
@@ -51,6 +52,7 @@ Unit Size
             <wounds>1</wounds>
         </stats>
         <size>10</size>
+        <cost>100</cost>
       <weapons>
         <weapon type ="melee">Celestite Club</weapon>
         <weapon type ="melee">Powerful Jaws and Stardrake Shield</weapon>
@@ -67,6 +69,7 @@ Unit Size
             <wounds>1</wounds>
         </stats>
         <size>5</size>
+        <cost>100</cost>
       <weapons>
         <weapon type ="melee">Celestite Polearm</weapon>
         <weapon type ="melee">Powerful Jaws and Stardrake Shield</weapon>
@@ -83,6 +86,7 @@ Unit Size
         <wounds>1</wounds>
       </stats>
       <size>10</size>
+      <cost>80</cost>
       <weapons>
         <weapon type ="ranged">Meteoric Javelin</weapon>
         <weapon type ="ranged">Boltspitter</weapon>
@@ -102,6 +106,7 @@ Unit Size
         <wounds>1</wounds>
       </stats>
       <size>10</size>
+      <cost>80</cost>
       <weapons>
         <weapon type ="ranged">Boltspitter</weapon>
         <weapon type ="melee">Boltspitter (M)</weapon>
@@ -119,6 +124,7 @@ Unit Size
         <wounds>4</wounds>
       </stats>
       <size>3</size>
+      <cost>180</cost>
       <weapons>
         <weapon type ="melee">Drakebite Maul</weapon>
         <weapon type ="melee">Vice-Like Jaws</weapon>

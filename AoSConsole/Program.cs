@@ -68,6 +68,13 @@ namespace AoSConsole
             Console.Out.WriteLine("5. Quit");
         }
         */
+
+        //Number crunches a series of battles and prints out interesting things.
+        static void NumberCrunch(Stats[] input)
+        {
+            
+        }
+
         static void Main(string[] args)
         {
             Console.Out.WriteLine(AppDomain.CurrentDomain.BaseDirectory);
@@ -81,33 +88,36 @@ namespace AoSConsole
             //FACTION DATABASES
             LoadFactions();
 
-            //CHANGE THESE FOR PLAYTIMES//
-            String NameA = "Kroxigor";
-            int SizeA = 3;
-
-            String NameB = "Protectors";
-            int SizeB = 5;
-            //--------------------------//
-
-            Model UnitA = GetModel(NameA);
-            if (UnitA == null)
-            {
-                Console.Out.WriteLine("Unit " + NameA + " not found!");
-                //Environment.Exit(-1);
-            }
-
-            Model UnitB = GetModel(NameB);
-            if (UnitB == null)
-            {
-                Console.Out.WriteLine("Unit " + NameB + " not found!");
-                Console.In.ReadLine();
-                Environment.Exit(-1);
-            }
-
-
+            
             
             while (true)
             {
+                Console.Out.WriteLine("Choose Unit A:");
+                String NameA = Console.In.ReadLine();
+                Console.Out.WriteLine("Number of Models?");
+                int SizeA = int.Parse(Console.In.ReadLine());
+
+                Console.Out.WriteLine("Choose Unit B:");
+                String NameB = Console.In.ReadLine();
+                Console.Out.WriteLine("Number of Models?");
+                int SizeB = int.Parse(Console.In.ReadLine());
+                //--------------------------//
+
+                Model UnitA = GetModel(NameA);
+                if (UnitA == null)
+                {
+                    Console.Out.WriteLine("Unit " + NameA + " not found!");
+                    Console.In.ReadLine();
+                    Environment.Exit(-1);
+                }
+
+                Model UnitB = GetModel(NameB);
+                if (UnitB == null)
+                {
+                    Console.Out.WriteLine("Unit " + NameB + " not found!");
+                    Console.In.ReadLine();
+                    Environment.Exit(-1);
+                }
 
                 Console.Out.WriteLine("How many battles?");
                 int reps = int.Parse(Console.In.ReadLine());
@@ -126,7 +136,8 @@ namespace AoSConsole
                     Battle.Reset();
                 }
 
-                //Calculate averages.
+                NumberCrunch(BattleArray);
+                //Numberwang time.
                 float AWins = 0;
                 float BWins = 0;
                 float ASurv = 0;
@@ -153,9 +164,9 @@ namespace AoSConsole
                 Console.Out.WriteLine("NUMBERS TIME!\n");
                 Console.Out.WriteLine("|Most wins|\n" + mostWins + " with " + winNum + "\n");
                 Console.Out.WriteLine("|Percentage of games won|\n" + Battle.SideA.Name + ": " + 100*(AWins/reps) + "%\n" + Battle.SideB.Name + ": " + 100*(BWins/reps) + "%\n");
-                float ASpercent = 100*(ASurv/reps) / SizeA;
-                float BSpercent = 100*(BSurv/reps) / SizeB;
-                Console.Out.WriteLine("|Average Surviving Models Per Win|\n" + Battle.SideA.Name + ": " + (ASurv/reps) + " (" + ASpercent + "%)\n" + Battle.SideB.Name + ": " + (BSurv/reps) + " (" + BSpercent + " %)\n");
+                float ASpercent = (AWins != 0) ? 100 * (ASurv / AWins) / SizeA : 0f;
+                float BSpercent = (BWins != 0) ? 100 * (BSurv / BWins) / SizeB : 0f;
+                Console.Out.WriteLine("|Average Surviving Models Per Win|\n" + Battle.SideA.Name + ": " + (ASurv/AWins) + " (" + ASpercent + "%)\n" + Battle.SideB.Name + ": " + (BSurv/BWins) + " (" + BSpercent + "%)\n");
 
                 //Battle.PrintSides();
                 //Console.Out.WriteLine("\nBegin?");
