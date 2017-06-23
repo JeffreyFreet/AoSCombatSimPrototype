@@ -118,14 +118,17 @@ namespace AoSConsole
                     Console.In.ReadLine();
                     Environment.Exit(-1);
                 }
+                
+                Battle.SideA = new Unit(UnitA, SizeA);
+                Battle.SideB = new Unit(UnitB, SizeB);
+
+                Console.Out.WriteLine("Side A totals " + Battle.SideA.Count * UnitA.Cost + " points.");
+                Console.Out.WriteLine("Side B totals " + Battle.SideB.Count * UnitB.Cost + " points.");
 
                 Console.Out.WriteLine("How many battles?");
                 int reps = int.Parse(Console.In.ReadLine());
 
                 Stats[] BattleArray = new Stats[reps];
-
-                Battle.SideA = new Unit(UnitA, SizeA);
-                Battle.SideB = new Unit(UnitB, SizeB);
 
                 Console.Out.WriteLine("Simulating " + reps + " battles.");
                 for (int i = 0; i < reps; i++)
